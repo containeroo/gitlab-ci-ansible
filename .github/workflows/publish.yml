@@ -1,0 +1,36 @@
+name: Publish container image
+on:
+  push:
+    tags:
+      - v*
+jobs:
+  multi-arch-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Log in to GitHub Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Prepare release tag
+        id: tag
+        run: echo ::set-output name=version::${GITHUB_REF#refs/tags/v}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64
+          push: true
+          labels: |
+            org.opencontainers.image.title=alpine-ansible
+            org.opencontainers.image.description=alpine-ansible
+            org.opencontainers.image.url=https://github.com/containeroo/alpine-ansible
+            org.opencontainers.image.source=https://github.com/containeroo/alpine-ansible
+            org.opencontainers.image.version=${{ steps.tag.outputs.version }}
+          tags: |
+            ghcr.io/containeroo/alpine-ansible:latest
+            ghcr.io/containeroo/alpine-ansible:${{ steps.tag.outputs.version }}
