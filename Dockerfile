@@ -8,6 +8,7 @@ RUN apk --update --no-cache add \
   openssh-client \
   openssl \
   py3-cryptography \
+  py3-jmespath \
   py3-pip \
   py3-yaml \
   python3 \
