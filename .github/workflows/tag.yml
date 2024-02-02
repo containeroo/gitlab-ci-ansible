@@ -6,11 +6,14 @@ on:
 jobs:
   generate-tag:
     runs-on: ubuntu-latest
+    outputs:
+      tag_name: ${{ steps.set_output.outputs.tag_name }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: "0"
       - name: Update datasource in Dockerfile
+        id: update_datasource
         run: |
           ansible_version=$(grep -Eo 'ansible==([0-9]+(\.[0-9]+)*)' requirements.txt | cut -d'=' -f3)
           echo "ansible_version: $ansible_version"
@@ -32,14 +35,16 @@ jobs:
           echo "new_version: $new_version"
 
           echo "TAG_NAME=${new_version}" >> "${GITHUB_ENV}"
+          echo "::set-output name=tag_name::$new_version"
   create-tag:
+    needs: generate-tag
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: rickstaa/action-create-tag@v1
-        id: "tag_create"
+        id: tag_create
         with:
-          tag: "v${{ env.TAG_NAME }}"
+          tag: "v${{ needs.generate-tag.outputs.tag_name }}"
           tag_exists_error: false
