@@ -36,7 +36,7 @@ jobs:
 
           echo "tag_name=${new_version}" >> "${GITHUB_OUTPUT}"
   create:
-    needs: generate-tag
+    needs: generate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
