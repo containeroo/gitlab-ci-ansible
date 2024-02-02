@@ -38,8 +38,6 @@ jobs:
   create:
     needs: generate
     runs-on: ubuntu-latest
-    outputs:
-      tag: ${{ steps.generate.outputs.tag }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -67,7 +65,7 @@ jobs:
       - name: Create Release
         uses: actions/create-release@v1
         with:
-          tag_name: "${{ needs.create.outputs.tag }}"
+          tag_name: ${{ needs.generate.outputs.tag }}
           release_name: ${{ github.ref }}
           body: ${{steps.github_release.outputs.changelog}}
         env:
