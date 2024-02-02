@@ -58,7 +58,7 @@ jobs:
       - name: Debug tag output
         env:
           TAG: ${{needs.generate.outputs.tag}}
-        run: echo "Tag from generate job is $OUTPUT1"
+        run: echo "Tag from generate job is $TAG"
       - name: Build Changelog from PRs with labels
         id: github_release
         uses: mikepenz/release-changelog-builder-action@v4
@@ -69,8 +69,8 @@ jobs:
       - name: Create Release
         uses: actions/create-release@v1
         with:
-          tag_name: $TAG
-          release_name: $TAG
+          tag_name: ${{ env.TAG }}
+          release_name: ${{ env.TAG }}
           body: ${{steps.github_release.outputs.changelog}}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -101,7 +101,7 @@ jobs:
             org.opencontainers.image.description=gitlab-ci-ansible
             org.opencontainers.image.url=https://github.com/containeroo/gitlab-ci-ansible
             org.opencontainers.image.source=https://github.com/containeroo/gitlab-ci-ansible
-            org.opencontainers.image.version="$TAG"
+            org.opencontainers.image.version="${{ env.TAG }}"
           tags: |
             ghcr.io/containeroo/gitlab-ci-ansible:latest
-            ghcr.io/containeroo/gitlab-ci-ansible: "$TAG"
+            ghcr.io/containeroo/gitlab-ci-ansible: "${{ env.TAG }}"
