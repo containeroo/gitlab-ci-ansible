@@ -58,7 +58,7 @@ jobs:
       - name: Debug tag output
         env:
           TAG: ${{needs.generate.outputs.tag}}
-        run: echo "Tag from generate job is $TAG"
+        run: echo "Tag from generate job is ${{env.TAG}}"
       - name: Build Changelog from PRs with labels
         id: github_release
         uses: mikepenz/release-changelog-builder-action@v4
