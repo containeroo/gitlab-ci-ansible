@@ -34,8 +34,7 @@ jobs:
           new_version="$ansible_version-build$new_build_number"
           echo "new_version: $new_version"
 
-          echo "TAG_NAME=${new_version}" >> "${GITHUB_ENV}"
-          echo "::set-output name=tag_name::$new_version"
+          echo "tag_name=${new_version}" >> "${GITHUB_OUTPUT}"
   create-tag:
     needs: generate-tag
     runs-on: ubuntu-latest
