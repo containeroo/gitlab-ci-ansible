@@ -56,7 +56,9 @@ jobs:
         with:
           fetch-depth: "0"
       - name: Debug tag output
-        run: echo "Tag from generate job is ${{ needs.generate.outputs.tag }}"
+        env:
+          OUTPUT1: ${{needs.generate.outputs.tag}}
+        run: echo "Tag from generate job is $OUTPUT1"
       - name: Build Changelog from PRs with labels
         id: github_release
         uses: mikepenz/release-changelog-builder-action@v4
@@ -67,7 +69,7 @@ jobs:
       - name: Create Release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ needs.generate.outputs.tag }}
+          tag_name: $OUTPUT1
           release_name: ${{ github.ref }}
           body: ${{steps.github_release.outputs.changelog}}
         env:
