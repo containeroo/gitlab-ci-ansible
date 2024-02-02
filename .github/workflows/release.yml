@@ -53,6 +53,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: "0"
+      - name: Debug tag output
+        run: echo "Tag from generate job is ${{ needs.generate.outputs.tag }}"
       - name: Build Changelog from PRs with labels
         id: github_release
         uses: mikepenz/release-changelog-builder-action@v4
